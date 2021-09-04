@@ -10,7 +10,7 @@
     "seed": 0,
     "start_epoch": 0,
     "epochs": 3,
-    "batch_size": 64,
+    "batch_size": 32,
     "max_length": 512,
     "num_workers": 1,
     "save_path": "./output/20210905_pubmedbert_concat",
