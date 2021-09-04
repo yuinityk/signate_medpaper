@@ -16,7 +16,6 @@ class Args:
     start_epoch: int
     epochs: int
     batch_size: int
-    max_length: int = 512
     num_workers: int
     save_path: str
     kfold_nsplit: int
@@ -28,4 +27,6 @@ class Args:
     thr: float = field(default=None)
     id_to_0: List[int] = field(default=None)
     id_to_1: List[int] = field(default=None)
+    max_length: int = 512
+
 
