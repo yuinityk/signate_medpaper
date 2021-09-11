@@ -54,14 +54,14 @@ def test_title_abst_concat(df_test, args, fold):
 
     return prob_test
 
-def ensemble_folds(prob_test, args):
+def ensemble_folds(prob_test, args, ensemble_type):
     prob_array = prob_test.values
 
-    if args.ensemble_type == "prob_mean":
+    if ensemble_type == "prob_mean":
         prob_array = np.mean(prob_array, axis=1)
         pred_array = np.where(prob_array > args.thr, 1, 0)
 
-    elif args.ensemble_type == "pred_vote":
+    elif ensemble_type == "pred_vote":
         pred_array = np.where(prob_array > args.thr, 1, 0)
         pred_array = np.mean(pred_array, axis=1)
         pred_array = np.where(pred_array >= 0.5, 1, 0)
@@ -89,8 +89,9 @@ def main_title_abst_concat(args):
         else:
             prob_test = prob_test.merge(_prob_test_fold, left_index=True, right_index=True)
 
-    df_pred = ensemble_folds(prob_test, args).sort_index()
-    df_pred.to_csv(os.path.join(args.save_path, f"submit_{args.trial_name}.csv"), index=True, header=False)
+    for ensemble_type in ["prob_mean", "pred_vote"]:
+        df_pred = ensemble_folds(prob_test, args, ensemble_type).sort_index()
+        df_pred.to_csv(os.path.join(args.save_path, f"submit_{args.trial_name}_{ensemble_type}.csv"), index=True, header=False)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

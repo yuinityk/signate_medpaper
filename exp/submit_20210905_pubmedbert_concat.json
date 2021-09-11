@@ -16,7 +16,6 @@
     ],
     "id_to_1": null,
     "kfold_nsplit": 5,
-    "ensemble_type": "prob_mean",
     "dir_path": "./data/",
     "fname_train": "train.csv",
     "fname_test": "test.csv",

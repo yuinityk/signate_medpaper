@@ -42,7 +42,6 @@ class SubmitArgs:
     save_path: str
     kfold_nsplit: int
     dir_path: str
-    ensemble_type: str
     fname_train: str
     fname_test: str
     fname_sub: str
