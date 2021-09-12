@@ -13,6 +13,8 @@ from torch.nn import BCELoss
 try:
     import torch_xla
     import torch_xla.core.xla_model as xm
+except:
+    pass
 
 sys.path.append('./src/')
 from data.Dataset import ClassifyDataset, SRTitleDataset, SRTitleAbstConcatenateDataset
