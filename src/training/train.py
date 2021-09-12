@@ -189,6 +189,11 @@ def train_valid_fold_title_abst_concat(df_train, args, fold):
     )
 
     model = SRTitleClassifyTransformer(args.model_name)
+
+    if args.base_model_name:
+        base_file_path = f"./output/{args.base_model_name}/{args.base_model_name}-fold_{fold}.bin"
+        model.load_state_dict(torch.load(base_file_path))
+
     model.to(args.device)
     criterion = eval(args.loss)()
     optimizer = transformers.AdamW(model.parameters(), lr=args.lr)
