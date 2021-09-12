@@ -10,6 +10,9 @@ from torch.utils.data import DataLoader
 import transformers
 
 from torch.nn import BCELoss
+try:
+    import torch_xla
+    import torch_xla.core.xla_model as xm
 
 sys.path.append('./src/')
 from data.Dataset import ClassifyDataset, SRTitleDataset, SRTitleAbstConcatenateDataset
@@ -56,7 +59,10 @@ def batch_iterate_title(args, model, loader, criterion, phase, epoch, optimizer,
         loss = criterion(output, labels)
         if phase == 'train':
             loss.backward()
-            optimizer.step()
+            if type(args.device) != str: # TPU
+                xm.optimizer_step(optimizer, barrier=True)
+            else:
+                optimizer.step()
             if scheduler and args.step_scheduler:
                 scheduler.step()
 
@@ -280,6 +286,8 @@ if __name__ == '__main__':
         args = json.load(f)
     main_funcname = args['main_funcname']
     args = Args(**args)
+    if args.device == 'tpu':
+        args.device = xm.xla_device()
     eval(main_funcname)(args)
 
 
