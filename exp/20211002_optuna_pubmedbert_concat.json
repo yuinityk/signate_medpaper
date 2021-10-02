@@ -29,7 +29,7 @@
         7708
     ],
     "id_to_1": null,
-    "kfold_nsplit": 5,
+    "kfold_nsplit": 3,
     "dir_path": "./data/",
     "loss": "BCELoss",
     "fname_train": "train.csv",
