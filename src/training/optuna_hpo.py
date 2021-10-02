@@ -134,7 +134,7 @@ def train_valid_fold_title_abst_concat(trial, df_train, args, fold):
         elif type(args.dropout) == float:
             dropout = float
 
-        config = AutoConfig.from_pretrained(args.model_name)
+        config = transformers.AutoConfig.from_pretrained(args.model_name)
         config.hidden_dropout_prob = dropout
         config.attention_probs_dropout_prob = dropout
 
