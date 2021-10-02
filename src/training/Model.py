@@ -7,7 +7,7 @@ class SRTitleClassifyTransformer(nn.Module):
     def __init__(self, model_name, config=None):
         super().__init__()
         self.transformer_title = AutoModelForSequenceClassification \
-                                .from_pretrained(model_name, config=config, num_labels=1)
+                                .from_pretrained(model_name, config=config)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, input_ids_title=None, attention_mask_title=None):

@@ -121,24 +121,22 @@ def train_valid_fold_title_abst_concat(trial, df_train, args, fold):
         num_workers=args.num_workers
     )
 
-    model = None
-    if args.dropout is None:
-        model = SRTitleClassifyTransformer(args.model_name)
-    else:
-        dropout = None
-        if type(args.dropout) == dict:
-            suggest_method = args.dropout["suggest_method"]
-            low = args.dropout["low"]
-            high = args.dropout["high"]
-            exec(f"dropout = trial.{suggest_method}('lr', low={low}, high={high})")
-        elif type(args.dropout) == float:
-            dropout = float
+    dropout = None
+    if type(args.dropout) == dict:
+        suggest_method = args.dropout["suggest_method"]
+        low = args.dropout["low"]
+        high = args.dropout["high"]
+        exec(f"dropout = trial.{suggest_method}('lr', low={low}, high={high})")
+    elif type(args.dropout) == float:
+        dropout = float
 
-        config = transformers.AutoConfig.from_pretrained(args.model_name)
+    config = transformers.AutoConfig.from_pretrained(args.model_name)
+    config.num_labels = 1
+    if dropout is not None:
         config.hidden_dropout_prob = dropout
         config.attention_probs_dropout_prob = dropout
 
-        model = SRTitleClassifyTransformer(args.model_name, config=config)
+    model = SRTitleClassifyTransformer(args.model_name, config=config)
 
     if args.base_model_name:
         base_file_path = f"./output/{args.base_model_name}/{args.base_model_name}-fold_{fold}.bin"
