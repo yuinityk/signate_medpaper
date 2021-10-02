@@ -1,0 +1,38 @@
+{
+    "trial_name": "20211002_optuna_pubmedbert_concat",
+    "main_funcname": "main_title_abst_concat",
+    "debug": true,
+    "device": "cuda",
+    "model_name": "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract",
+    "lr": {
+        "suggest_method": "suggest_uniform",
+        "low": 1e-5,
+        "high": 1e-4
+    },
+    "dropout": {
+        "suggest_method": "suggest_uniform",
+        "low": 0.05,
+        "high": 0.3
+    },
+    "step_scheduler": true,
+    "epoch_scheduler": true,
+    "seed": 0,
+    "start_epoch": 0,
+    "epochs": 3,
+    "batch_size": 8,
+    "max_length": 512,
+    "num_workers": 1,
+    "save_path": "./output/20211002_optuna_pubmedbert_concat",
+    "thr": null,
+    "id_to_0": [
+        2488,
+        7708
+    ],
+    "id_to_1": null,
+    "kfold_nsplit": 5,
+    "dir_path": "./data/",
+    "loss": "BCELoss",
+    "fname_train": "train.csv",
+    "fname_test": "test.csv",
+    "fname_sub": "sample_submit.csv"
+}

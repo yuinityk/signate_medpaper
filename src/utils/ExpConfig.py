@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Any
 
 
 @dataclass
@@ -9,7 +9,6 @@ class Args:
     debug: bool
     device: str
     model_name: str
-    lr: float
     step_scheduler: bool
     epoch_scheduler: bool
     seed: int
@@ -24,6 +23,8 @@ class Args:
     fname_train: str
     fname_test: str
     fname_sub: str
+    lr: Any = field(default=2e-5)
+    dropout: Any = field(default=None)
     thr: float = field(default=None)
     id_to_0: List[int] = field(default=None)
     id_to_1: List[int] = field(default=None)
