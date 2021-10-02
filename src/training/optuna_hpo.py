@@ -214,7 +214,7 @@ def main_title_abst_concat(args):
         direction="maximize",
     )
 
-    study.optimize(partial(objective, df_train=df_train, args=args), timeout=2*36)#00)
+    study.optimize(partial(objective, df_train=df_train, args=args), timeout=2*3600)
 
     print(f"{study.best_value:.5f}")
     print(study.best_params)
