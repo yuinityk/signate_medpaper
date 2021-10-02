@@ -121,14 +121,14 @@ def train_valid_fold_title_abst_concat(trial, df_train, args, fold):
         num_workers=args.num_workers
     )
 
-    dropout = None
     if type(args.dropout) == dict:
         suggest_method = args.dropout["suggest_method"]
         low = args.dropout["low"]
         high = args.dropout["high"]
-        exec(f"dropout = trial.{suggest_method}('lr', low={low}, high={high})")
+        # exec(f"dropout = trial.{suggest_method}('dropout', low={low}, high={high})")
+        dropout = trial.suggest_uniform("dropout", low=low, high=high)
     elif type(args.dropout) == float:
-        dropout = float
+        dropout = args.dropout
 
     config = transformers.AutoConfig.from_pretrained(args.model_name)
     config.num_labels = 1
@@ -150,7 +150,8 @@ def train_valid_fold_title_abst_concat(trial, df_train, args, fold):
         suggest_method = args.lr["suggest_method"]
         low = args.lr["low"]
         high = args.lr["high"]
-        exec(f"lr = trial.{suggest_method}('lr', low={low}, high={high})")
+        # exec(f"lr = trial.{suggest_method}('lr', low={low}, high={high})")
+        lr = trial.suggest_uniform("lr", low=low, high=high)
     else:
         lr = args.lr
 
