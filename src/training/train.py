@@ -19,7 +19,7 @@ except:
 
 sys.path.append('./src/')
 from data.Dataset import ClassifyDataset, SRTitleDataset, SRTitleAbstConcatenateDataset, SRTitleAbstConcatenateSupervisedCLDataset
-from training.Model import SRTitleClassifyTransformer
+from training.Model import SRTitleClassifyTransformer, SRTitleEmbedTransformer
 from training.Loss import MaxMarginContrastiveLoss
 from utils.ExpConfig import Args
 from utils.Meter import AverageMeter, MetricMeter
