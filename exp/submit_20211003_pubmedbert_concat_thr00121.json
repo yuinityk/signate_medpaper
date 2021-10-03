@@ -1,0 +1,24 @@
+{
+    "trial_name": "20211002_pubmedbert_concat",
+    "main_funcname": "main_title_abst_concat",
+    "debug": false,
+    "device": "cuda",
+    "model_name": "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract",
+    "dropout": 0.06776,
+    "seed": 0,
+    "batch_size": 8,
+    "max_length": 512,
+    "num_workers": 1,
+    "save_path": "./output/20211002_pubmedbert_concat",
+    "thr": 0.0121,
+    "id_to_0": [
+        2488,
+        7708
+    ],
+    "id_to_1": null,
+    "kfold_nsplit": 5,
+    "dir_path": "./data/",
+    "fname_train": "train.csv",
+    "fname_test": "test.csv",
+    "fname_sub": "sample_submit.csv"
+}

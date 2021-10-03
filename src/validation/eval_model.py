@@ -88,8 +88,9 @@ def main_title_abst_concat(args):
     dataset = ClassifyDataset(dir_path=args.dir_path)
     df_train = dataset.get(args.fname_train, args.id_to_1, args.id_to_0)
     df_test = dataset.get(args.fname_test)
-    thr = df_train['judgement'].mean()
-    args.thr = thr
+    if args.thr is None:
+        thr = df_train['judgement'].mean()
+        args.thr = thr
 
     prob_test = None
     for fold in range(args.kfold_nsplit):
