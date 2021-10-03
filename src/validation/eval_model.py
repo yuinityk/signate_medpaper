@@ -32,6 +32,7 @@ def test_title_abst_concat(df_test, args, fold):
         num_workers=args.num_workers
     )
 
+    dropout = None
     if args.dropout is not None:
         dropout = args.dropout
 

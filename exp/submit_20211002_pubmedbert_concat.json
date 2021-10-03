@@ -4,6 +4,7 @@
     "debug": false,
     "device": "cuda",
     "model_name": "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract",
+    "dropout": 0.06776,
     "seed": 0,
     "batch_size": 8,
     "max_length": 512,
