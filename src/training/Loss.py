@@ -21,6 +21,6 @@ class MaxMarginContrastiveLoss(nn.Module):
         loss = (1-label_diff) * dist \
              + label_diff * torch.maximum(zero_tensor, self.margin - dist**0.5) ** 2
 
-        return loss
+        return loss.mean()
 
 

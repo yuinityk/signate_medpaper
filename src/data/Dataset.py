@@ -122,9 +122,9 @@ class SRTitleAbstConcatenateSupervisedCLDataset(Dataset):
             return_attention_mask=True
         )
 
-        df_idx_1_1 = df_idx_1_1.sample(frac=1, random_state=0)
-        df_idx_1_0 = df_idx_1_0.sample(frac=1, random_state=0)
-        df_idx_0_0 = df_idx_0_0.sample(frac=1, random_state=0)
+        df_idx_1_1 = df_idx_1_1.sample(frac=1, random_state=0).reset_index(drop=True)
+        df_idx_1_0 = df_idx_1_0.sample(frac=1, random_state=0).reset_index(drop=True)
+        df_idx_0_0 = df_idx_0_0.sample(frac=1, random_state=0).reset_index(drop=True)
         df_len = min(len(df_idx_1_1), len(df_idx_1_0), len(df_idx_0_0))
         df_idx_1_1 = df_idx_1_1.iloc[:df_len, :]
         df_idx_1_0 = df_idx_1_0.iloc[:df_len, :]

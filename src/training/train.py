@@ -110,12 +110,12 @@ def batch_iterate_SCL(args, model, loader, criterion, phase, epoch, optimizer, s
             if scheduler and args.step_scheduler:
                 scheduler.step()
 
-        batch_size = labels.size(0)
+        batch_size = label_0.size(0)
         losses.update(loss.item(), batch_size)
 
     t.close()
 
-    return _, losses.avg
+    return None, losses.avg
 
 
 def train_valid_fold_title(df_train, args, fold):
