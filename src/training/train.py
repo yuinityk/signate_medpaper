@@ -35,7 +35,6 @@ def step_epoch(args, model, loader, criterion, phase, epoch, batch_func, optimiz
         model.eval()
 
     if phase == 'train':
-        # TODO batch_iterateを可変に
         scores_avg, losses_avg = eval(batch_func)(args, model, loader, criterion, phase, epoch, optimizer, scheduler, losses, scores)
     else:
         with torch.no_grad():
@@ -111,12 +110,11 @@ def batch_iterate_SCL(args, model, loader, criterion, phase, epoch, optimizer, s
                 scheduler.step()
 
         batch_size = labels.size(0)
-        scores.update(labels, output)
         losses.update(loss.item(), batch_size)
 
     t.close()
 
-    return scores.avg, losses.avg
+    return _, losses.avg
 
 
 def train_valid_fold_title(df_train, args, fold):
@@ -358,14 +356,14 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
     )
 
     for epoch in range(args.start_epoch, args.epochs):
-        train_avg, train_loss = step_epoch(args, model, train_loader,
+        _, train_loss = step_epoch(args, model, train_loader,
                                            criterion, 'train', epoch,
                                            "batch_iterate_SCL",
                                            optimizer, scheduler)
 
-        valid_avg, valid_loss = step_epoch(args, model, valid_loader,
-                                           criterion, 'valid', epoch,
-                                           "batch_iterate_SCL")
+        # valid_avg, valid_loss = step_epoch(args, model, valid_loader,
+        #                                    criterion, 'valid', epoch,
+        #                                    "batch_iterate_SCL")
 
         if args.epoch_scheduler:
             scheduler.step()
@@ -373,16 +371,9 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
         content = f'''
             {time.ctime()} \n
             Fold:{fold}, Epoch:{epoch}, lr:{optimizer.param_groups[0]['lr']:.7}\n
-            Train Loss:{train_loss:0.4f} - FBeta:{train_avg['FBeta']:0.4f}\n
-            Valid Loss:{valid_loss:0.4f} - FBeta:{valid_avg['FBeta']:0.4f}\n
+            Train Loss:{train_loss:0.4f}\n
         '''
         print(content)
-
-        if valid_avg['FBeta'] > best_fbeta:
-            print(f'########## >>>>>>>> Model Improved From {best_fbeta} ----> {valid_avg["FBeta"]}')
-            torch.save(model.state_dict(), os.path.join(args.save_path, f'{args.trial_name}-fold_{fold}.bin'))
-            best_fbeta = valid_avg['FBeta']
-
 
 def main_title(args):
     seed_torch(args.seed)
