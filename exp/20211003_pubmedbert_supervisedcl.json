@@ -27,5 +27,8 @@
     "fname_train": "train.csv",
     "fname_test": "test.csv",
     "fname_sub": "sample_submit.csv",
-    "margin": 1.0
+    "margin": 1.0,
+    "path_idx_1_1": "./output/20211003_make_close_pair/high_sim_1_1.csv",
+    "path_idx_1_0": "./output/20211003_make_close_pair/high_sim_1_0.csv",
+    "path_idx_0_0": "./output/20211003_make_close_pair/high_sim_0_0.csv"
 }

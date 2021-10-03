@@ -31,6 +31,9 @@ class Args:
     max_length: int = 512
     base_model_name: str = field(default=None)
     margin: float = field(default=None)
+    path_idx_1_1: str = field(default=None)
+    path_idx_1_0: str = field(default=None)
+    path_idx_0_0: str = field(default=None)
 
 @dataclass
 class SubmitArgs:
