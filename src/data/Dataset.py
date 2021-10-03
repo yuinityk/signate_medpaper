@@ -136,8 +136,8 @@ class SRTitleAbstConcatenateSupervisedCLDataset(Dataset):
 
     def __getitem__(self, idx):
         df_ = self.df_idx_list[idx%3]
-        idx_0 = df_[0][idx//3]
-        idx_1 = df_[1][idx//3]
+        idx_0 = df_.loc[idx//3, "0"]
+        idx_1 = df_.loc[idx//3, "1"]
         input_ids_0 = torch.tensor(self.text_tokenized['input_ids'][idx_0])
         input_ids_1 = torch.tensor(self.text_tokenized['input_ids'][idx_1])
         attention_mask_0 = torch.tensor(self.text_tokenized['attention_mask'][idx_0])
