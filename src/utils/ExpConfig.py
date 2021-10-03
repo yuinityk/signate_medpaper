@@ -30,6 +30,7 @@ class Args:
     id_to_1: List[int] = field(default=None)
     max_length: int = 512
     base_model_name: str = field(default=None)
+    margin: float = field(default=None)
 
 @dataclass
 class SubmitArgs:

@@ -97,3 +97,52 @@ class SRTitleAbstConcatenateDataset(Dataset):
             return id_, input_ids_title, attention_mask_title, label
         else:
             return id_, input_ids_title, attention_mask_title
+
+
+class SRTitleAbstConcatenateSupervisedCLDataset(Dataset):
+    def __init__(self, df, df_idx_1_1, df_idx_1_0, df_idx_0_0, model_name, max_length=512, train=True):
+        self.df = df
+        self.model_name = model_name
+        self.train = train
+        self.labels = None
+
+        if train:
+            self.labels = df['judgement'].values
+        else:
+            # only support training
+            raise ValueError
+
+        self.text = (df['title']+df['abstract'].fillna('')).tolist()
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.text_tokenized = tokenizer.batch_encode_plus(
+            self.text,
+            padding='max_length',
+            max_length=max_length,
+            truncation=True,
+            return_attention_mask=True
+        )
+
+        df_idx_1_1 = df_idx_1_1.sample(frac=1, random_state=0)
+        df_idx_1_0 = df_idx_1_0.sample(frac=1, random_state=0)
+        df_idx_0_0 = df_idx_0_0.sample(frac=1, random_state=0)
+        df_len = min(len(df_idx_1_1), len(df_idx_1_0), len(df_idx_0_0))
+        df_idx_1_1 = df_idx_1_1.iloc[:df_len, :]
+        df_idx_1_0 = df_idx_1_0.iloc[:df_len, :]
+        df_idx_0_0 = df_idx_0_0.iloc[:df_len, :]
+        self.df_idx_list = [df_idx_1_1, df_idx_1_0, df_idx_0_0]
+
+    def __len__(self):
+        return len(self.df_idx_list[0]) + len(self.df_idx_list[1]) + len(self.df_idx_list[2])
+
+    def __getitem__(self, idx):
+        df_ = self.df_idx_list[idx%3]
+        idx_0 = df_[0][idx//3]
+        idx_1 = df_[1][idx//3]
+        input_ids_0 = torch.tensor(self.text_tokenized['input_ids'][idx_0])
+        input_ids_1 = torch.tensor(self.text_tokenized['input_ids'][idx_1])
+        attention_mask_0 = torch.tensor(self.text_tokenized['attention_mask'][idx_0])
+        attention_mask_1 = torch.tensor(self.text_tokenized['attention_mask'][idx_1])
+
+        label_0 = torch.tensor(idx%3!=2).float()
+        label_1 = torch.tensor(idx%3==0).float()
+        return input_ids_0, input_ids_1, attention_mask_0, attention_mask_1, label_0, label_1
