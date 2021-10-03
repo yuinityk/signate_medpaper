@@ -18,7 +18,7 @@ except:
     pass
 
 sys.path.append('./src/')
-from data.Dataset import ClassifyDataset, SRTitleDataset, SRTitleAbstConcatenateDataset
+from data.Dataset import ClassifyDataset, SRTitleDataset, SRTitleAbstConcatenateDataset, SRTitleAbstConcatenateSupervisedCLDataset
 from training.Model import SRTitleClassifyTransformer
 from training.Loss import MaxMarginContrastiveLoss
 from utils.ExpConfig import Args
