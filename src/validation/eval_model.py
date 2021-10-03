@@ -32,7 +32,16 @@ def test_title_abst_concat(df_test, args, fold):
         num_workers=args.num_workers
     )
 
-    model = SRTitleClassifyTransformer(args.model_name)
+    if args.dropout is not None:
+        dropout = args.dropout
+
+    config = transformers.AutoConfig.from_pretrained(args.model_name)
+    config.num_labels = 1
+    if dropout is not None:
+        config.hidden_dropout_prob = dropout
+        config.attention_probs_dropout_prob = dropout
+
+    model = SRTitleClassifyTransformer(args.model_name, config=config)
     model.load_state_dict(torch.load(os.path.join(args.save_path, f"{args.trial_name}-fold_{fold}.bin")))
     model.to(args.device)
 
