@@ -11,7 +11,7 @@ class MaxMarginContrastiveLoss(nn.Module):
         self.metric = metric
         self.device = device
 
-    def forward(self, embed_0, embed_1, label_0, label_1)
+    def forward(self, embed_0, embed_1, label_0, label_1):
         dist = None
         if self.metric == 'euclidean':
             dist = ((embed_0 - embed_1) ** 2).sum(axis=1) # size: batch
