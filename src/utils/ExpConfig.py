@@ -47,6 +47,7 @@ class SubmitArgs:
     fname_train: str
     fname_test: str
     fname_sub: str
+    dropout: Any = field(default=None)
     thr: float = field(default=None)
     id_to_0: List[int] = field(default=None)
     id_to_1: List[int] = field(default=None)
