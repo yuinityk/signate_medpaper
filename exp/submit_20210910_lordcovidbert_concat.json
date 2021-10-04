@@ -8,7 +8,7 @@
     "batch_size": 8,
     "max_length": 512,
     "num_workers": 1,
-    "save_path": "./output/20211002_lordcovidbert_concat",
+    "save_path": "./output/20210910_lordcovidbert_concat",
     "thr": null,
     "id_to_0": [
         2488,
