@@ -1,0 +1,31 @@
+{
+    "trial_name": "20211004_pubmedbert_scl_finetune_nofold",
+    "main_funcname": "main_title_abst_concat_nofold",
+    "debug": false,
+    "device": "cuda",
+    "model_name": "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract",
+    "lr": 1.784e-5,
+    "dropout": 0.06776,
+    "step_scheduler": true,
+    "epoch_scheduler": true,
+    "seed": 0,
+    "start_epoch": 0,
+    "epochs": 2,
+    "batch_size": 8,
+    "max_length": 512,
+    "num_workers": 1,
+    "save_path": "./output/20211004_pubmedbert_scl_finetune_nofold",
+    "thr": null,
+    "id_to_0": [
+        2488,
+        7708
+    ],
+    "id_to_1": null,
+    "kfold_nsplit": 5,
+    "dir_path": "./data/",
+    "loss": "BCELoss",
+    "fname_train": "train.csv",
+    "fname_test": "test.csv",
+    "fname_sub": "sample_submit.csv",
+    "base_all_model_path": "20211003_pubmedbert_supervisedcl/20211003_pubmedbert_concat-epoch_5"
+}

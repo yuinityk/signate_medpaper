@@ -376,6 +376,73 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
         torch.save(model.state_dict(), os.path.join(args.save_path, f'{args.trial_name}-epoch_{epoch}.bin'))
 
 
+def train_valid_title_abst_concat_nofold(df_train, args):
+    df_train = df_train.reset_index(drop=True)
+
+    train_dataset = SRTitleAbstConcatenateDataset(
+        df_train,
+        args.model_name,
+        max_length=args.max_length,
+        train=True
+    )
+
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=args.batch_size,
+        shuffle=True,
+        drop_last=True,
+        num_workers=args.num_workers
+    )
+
+    if args.dropout is not None:
+        dropout = args.dropout
+
+    config = transformers.AutoConfig.from_pretrained(args.model_name)
+    config.num_labels = 1
+    if dropout is not None:
+        config.hidden_dropout_prob = dropout
+        config.attention_probs_dropout_prob = dropout
+
+    model = SRTitleClassifyTransformer(args.model_name, config=config)
+
+    if args.base_model_name:
+        base_file_path = f"./output/{args.base_model_name}/{args.base_model_name}-fold_{fold}.bin"
+        model.load_state_dict(torch.load(base_file_path))
+
+    elif args.base_all_model_path:
+        base_file_path = f"./output/{args.base_all_model_path}.bin"
+        model.load_state_dict(torch.load(base_file_path))
+
+    model.to(args.device)
+    criterion = eval(args.loss)()
+    optimizer = transformers.AdamW(model.parameters(), lr=args.lr)
+
+    num_warmup_steps = int(0.1 * args.epochs * len(train_loader))
+    num_training_steps = int(len(train_loader) * args.epochs)
+    scheduler = transformers.get_linear_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=num_warmup_steps,
+        num_training_steps=num_training_steps
+    )
+
+    for epoch in range(args.start_epoch, args.epochs):
+        train_avg, train_loss = step_epoch(args, model, train_loader,
+                                           criterion, 'train', epoch,
+                                           "batch_iterate_title",
+                                           optimizer, scheduler)
+
+        if args.epoch_scheduler:
+            scheduler.step()
+
+        content = f'''
+            {time.ctime()} \n
+            Epoch:{epoch}, lr:{optimizer.param_groups[0]['lr']:.7}\n
+            Train Loss:{train_loss:0.4f}\n
+        '''
+        print(content)
+        torch.save(model.state_dict(), os.path.join(args.save_path, f'{args.trial_name}-epoch_{epoch}.bin'))
+
+
 def model_adhoc_freeze_bert(model):
     for param in model.transformer_title.bert.parameters():
         param.requires_grad = False
@@ -438,6 +505,19 @@ def main_title_abst_concat_supervised_CL(args):
 
     train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_idx_1_0, df_idx_0_0, args)
 
+
+def main_title_abst_concat_nofold(args):
+    seed_torch(args.seed)
+
+    os.makedirs(args.save_path, exist_ok=True)
+
+    dataset = ClassifyDataset(dir_path=args.dir_path)
+    df_train = dataset.get(args.fname_train, args.id_to_1, args.id_to_0)
+    thr = df_train['judgement'].mean()
+    args.thr = thr
+    df_test = dataset.get(args.fname_test)
+
+    train_valid_title_abst_concat_nofold(df_train, args)
 
 
 if __name__ == '__main__':
