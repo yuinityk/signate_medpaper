@@ -377,7 +377,7 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
 
 
 def model_adhoc_freeze_bert(model):
-    for param in model.bert.parameters():
+    for param in model.transformer_title.bert.parameters():
         param.requires_grad = False
 
     return model
