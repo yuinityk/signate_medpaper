@@ -254,6 +254,13 @@ def train_valid_fold_title_abst_concat(df_train, args, fold):
         base_file_path = f"./output/{args.base_model_name}/{args.base_model_name}-fold_{fold}.bin"
         model.load_state_dict(torch.load(base_file_path))
 
+    elif args.base_all_model_path:
+        base_file_path = f"./output/{args.base_model_path}/{args.base_model_path}.bin"
+        model.load_state_dict(torch.load(base_file_path))
+
+    if args.model_adhoc:
+        model = eval(args.model_adhoc)(model)
+
     model.to(args.device)
     criterion = eval(args.loss)()
     optimizer = transformers.AdamW(model.parameters(), lr=args.lr)
@@ -296,6 +303,16 @@ def train_valid_fold_title_abst_concat(df_train, args, fold):
 
 def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_idx_1_0, df_idx_0_0, args):
 
+    if args.debug:
+        df_train = df_train.sample(frac=0.05, random_state=args.seed)
+        _cond = (df_idx_1_1['0'].isin(df_train['id'])) & (df_idx_1_1['1'].isin(df_train['id']))
+        df_idx_1_1 = df_idx_1_1[_cond]
+        _cond = (df_idx_1_0['0'].isin(df_train['id'])) & (df_idx_1_0['1'].isin(df_train['id']))
+        df_idx_1_0 = df_idx_1_0[_cond]
+        _cond = (df_idx_0_0['0'].isin(df_train['id'])) & (df_idx_0_0['1'].isin(df_train['id']))
+        df_idx_0_0 = df_idx_0_0[_cond]
+        # TODO above does not work because of mismatch of idx and index of text_tokenized
+
     train_dataset = SRTitleAbstConcatenateSupervisedCLDataset(
         df_train,
         df_idx_1_1,
@@ -306,13 +323,6 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
         train=True
     )
 
-    # valid_dataset = SRTitleAbstConcatenateDataset(
-    #     valid_fold,
-    #     args.model_name,
-    #     max_length=args.max_length,
-    #     train=True
-    # )
-
     train_loader = DataLoader(
         train_dataset,
         batch_size=args.batch_size,
@@ -320,14 +330,6 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
         drop_last=True,
         num_workers=args.num_workers
     )
-
-    # valid_loader = DataLoader(
-    #     valid_dataset,
-    #     batch_size=args.batch_size,
-    #     shuffle=False,
-    #     drop_last=False,
-    #     num_workers=args.num_workers
-    # )
 
     if args.dropout is not None:
         dropout = args.dropout
@@ -362,19 +364,24 @@ def train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_id
                                            "batch_iterate_SCL",
                                            optimizer, scheduler)
 
-        # valid_avg, valid_loss = step_epoch(args, model, valid_loader,
-        #                                    criterion, 'valid', epoch,
-        #                                    "batch_iterate_SCL")
-
         if args.epoch_scheduler:
             scheduler.step()
 
         content = f'''
             {time.ctime()} \n
-            Fold:{fold}, Epoch:{epoch}, lr:{optimizer.param_groups[0]['lr']:.7}\n
+            Epoch:{epoch}, lr:{optimizer.param_groups[0]['lr']:.7}\n
             Train Loss:{train_loss:0.4f}\n
         '''
         print(content)
+        torch.save(model.state_dict(), os.path.join(args.save_path, f'{args.trial_name}-epoch_{epoch}.bin'))
+
+
+def model_adhoc_freeze_bert(model):
+    for param in model.bert.parameters():
+        param.requires_grad = False
+
+    return model
+
 
 def main_title(args):
     seed_torch(args.seed)
@@ -430,6 +437,7 @@ def main_title_abst_concat_supervised_CL(args):
     df_idx_0_0 = pd.read_csv(args.path_idx_0_0)
 
     train_valid_fold_title_abst_concat_supervised_CL(df_train, df_idx_1_1, df_idx_1_0, df_idx_0_0, args)
+
 
 
 if __name__ == '__main__':
