@@ -10,6 +10,12 @@ import torch
 from torch.utils.data import DataLoader
 import transformers
 
+try:
+    import torch_xla
+    import torch_xla.core.xla_model as xm
+except:
+    pass
+
 sys.path.append('./src/')
 from data.Dataset import ClassifyDataset, SRTitleDataset, SRTitleAbstConcatenateDataset
 from training.Model import SRTitleClassifyTransformer
@@ -115,4 +121,6 @@ if __name__ == '__main__':
         args = json.load(f)
     main_funcname = args['main_funcname']
     args = SubmitArgs(**args)
+    if args.device == 'tpu':
+        args.device = xm.xla_device()
     eval(main_funcname)(args)
