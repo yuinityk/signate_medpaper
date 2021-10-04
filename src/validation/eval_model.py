@@ -100,6 +100,8 @@ def main_title_abst_concat(args):
         else:
             prob_test = prob_test.merge(_prob_test_fold, left_index=True, right_index=True)
 
+    prob_test.to_csv(os.path.join(args.save_path, f"prob_test_{args.trial_name}.csv"), index=True, header=True)
+
     for ensemble_type in ["prob_mean", "pred_vote"]:
         df_pred = ensemble_folds(prob_test, args, ensemble_type).sort_index()
         df_pred.to_csv(os.path.join(args.save_path, f"submit_{args.trial_name}_{ensemble_type}.csv"), index=True, header=False)
