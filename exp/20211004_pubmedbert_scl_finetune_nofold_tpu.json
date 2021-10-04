@@ -27,5 +27,5 @@
     "fname_train": "train.csv",
     "fname_test": "test.csv",
     "fname_sub": "sample_submit.csv",
-    "base_all_model_path": "20211003_pubmedbert_supervisedcl/20211003_pubmedbert_concat-epoch_5"
+    "base_all_model_path": "20211004_pubmedbert_scl_base"
 }
