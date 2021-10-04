@@ -1,5 +1,5 @@
 {
-    "trial_name": "20211004_pubmedbert_scl_finetune_nofold",
+    "trial_name": "20211004_pubmedbert_scl_finetune_nofold_tpu",
     "main_funcname": "main_title_abst_concat_nofold",
     "debug": false,
     "device": "tpu",
@@ -9,7 +9,7 @@
     "batch_size": 8,
     "max_length": 512,
     "num_workers": 1,
-    "save_path": "./output/20211004_pubmedbert_scl_finetune_nofold",
+    "save_path": "./output/20211004_pubmedbert_scl_finetune_nofold_tpu",
     "thr": null,
     "id_to_0": [
         2488,
