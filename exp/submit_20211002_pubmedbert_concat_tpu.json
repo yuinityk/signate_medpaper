@@ -9,7 +9,7 @@
     "batch_size": 8,
     "max_length": 512,
     "num_workers": 1,
-    "save_path": "./output/20211002_pubmedbert_concat",
+    "save_path": "./output/20211002_pubmedbert_concat_tpu",
     "thr": null,
     "id_to_0": [
         2488,
