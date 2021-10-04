@@ -255,7 +255,7 @@ def train_valid_fold_title_abst_concat(df_train, args, fold):
         model.load_state_dict(torch.load(base_file_path))
 
     elif args.base_all_model_path:
-        base_file_path = f"./output/{args.base_model_path}/{args.base_model_path}.bin"
+        base_file_path = f"./output/{args.base_all_model_path}/{args.base_all_model_path}.bin"
         model.load_state_dict(torch.load(base_file_path))
 
     if args.model_adhoc:
