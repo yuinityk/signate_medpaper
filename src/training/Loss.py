@@ -1,12 +1,10 @@
 import torch
 import torch.nn as nn
-from torch.nn import MSELoss
 
 
 class MaxMarginContrastiveLoss(nn.Module):
     def __init__(self, margin=1.0, metric='euclidean', device='cuda'):
         super().__init__()
-        self.mse = MSELoss(reduction='none')
         self.margin = margin
         self.metric = metric
         self.device = device

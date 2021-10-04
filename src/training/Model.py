@@ -33,3 +33,5 @@ class SRTitleEmbedTransformer(nn.Module):
         transformer_embed = transformer_embed.last_hidden_state * torch.unsqueeze(attention_mask_title, 2)
         transformer_embed = transformer_embed.sum(axis=1) / attention_mask_title.sum(axis=1, keepdim=True)
         return transformer_embed # batch x hidden_dim (768)
+
+
