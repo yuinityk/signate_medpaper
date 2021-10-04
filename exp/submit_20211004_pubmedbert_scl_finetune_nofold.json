@@ -1,6 +1,6 @@
 {
     "trial_name": "20211004_pubmedbert_scl_finetune_nofold",
-    "main_funcname": "main_title_abst_concat",
+    "main_funcname": "main_title_abst_concat_nofold",
     "debug": false,
     "device": "cuda",
     "model_name": "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract",
